@@ -1,20 +1,35 @@
-import React from 'react';
+import React, { Component } from 'react';
+
+import Paddle from './paddle';
+import Scoreboard from './scoreboard';
+import Ball from './ball';
 
 
-const PongApplication = () => (
-  <div className="game-area">
-    <div className="scoreboard">
-      <div className="player-1-score">
-        0
+class PongApplication extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      mousePosition: 0
+    };
+  }
+
+  render() {
+    const { mousePosition } = this.state;
+
+    return (
+      <div
+        className="game-area"
+        onMouseMove={(e) => this.setState({ mousePosition: e.clientY })}>
+        <Scoreboard
+          scorePlayer1={0}
+          scorePlayer2={0} />
+        <Paddle yPosition={mousePosition} />
+        <Paddle
+          yPosition={mousePosition}
+          isRightPaddle={true} />
+        <Ball position={{x: 100, y: 100}} />
       </div>
-      <div className="player-2-score">
-        0
-      </div>
-    </div>
-    <div className="paddle"></div>
-    <div className="paddle right-paddle"></div>
-    <div className="ball"></div>
-  </div>
-);
-
+    );
+  }
+}
 export default PongApplication;
