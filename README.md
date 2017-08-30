@@ -6,8 +6,8 @@ This is intended to be a follow-along demo, and so it's organized in several par
 
 - Part 1: Initial project setup [1-project-setup](https://github.com/denvaar/dom-pong-demo/tree/1-project-setup)
 - Part 2: Create React components [2-create-react-components](https://github.com/denvaar/dom-pong-demo/tree/2-create-react-components)  <-- YOU ARE HERE
-- Part 3: tbd
-- Part 4: tbd
+- Part 3: Add some logic
+- Part 4: Socket.io setup
 ...
 
 
