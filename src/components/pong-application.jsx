@@ -1,35 +1,44 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import Paddle from './paddle';
 import Scoreboard from './scoreboard';
 import Ball from './ball';
+import withPongLogic from './pong-logic';
 
 
-class PongApplication extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mousePosition: 0
-    };
-  }
+const PongApplication = ({
+  playerPaddle1,
+  playerPaddle2,
+  scorePlayer1,
+  scorePlayer2,
+  ballPosition,
+  handleMouseMove
+}) => (
+  <div
+    className="game-area"
+    onMouseMove={(e) => handleMouseMove(e.clientY)}>
+    <Scoreboard
+      scorePlayer1={scorePlayer1}
+      scorePlayer2={scorePlayer2} />
+    <Paddle yPosition={playerPaddle1} />
+    <Paddle
+      yPosition={playerPaddle1}
+      isRightPaddle={true} />
+    <Ball position={{x: ballPosition.x, y: ballPosition.y}} />
+  </div>
+);
 
-  render() {
-    const { mousePosition } = this.state;
+PongApplication.propTypes = {
+  playerPaddle1: PropTypes.number.isRequired,
+  playerPaddle2: PropTypes.number.isRequired,
+  scorePlayer1: PropTypes.number.isRequired,
+  scorePlayer2: PropTypes.number.isRequired,
+  ballPosition: PropTypes.shape({
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired
+  }).isRequired,
+  handleMouseMove: PropTypes.func.isRequired
+};
 
-    return (
-      <div
-        className="game-area"
-        onMouseMove={(e) => this.setState({ mousePosition: e.clientY })}>
-        <Scoreboard
-          scorePlayer1={0}
-          scorePlayer2={0} />
-        <Paddle yPosition={mousePosition} />
-        <Paddle
-          yPosition={mousePosition}
-          isRightPaddle={true} />
-        <Ball position={{x: 100, y: 100}} />
-      </div>
-    );
-  }
-}
 export default PongApplication;
