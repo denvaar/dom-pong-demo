@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import io from 'socket.io-client';
 
 import {
   updateBallPosition,
   updateScore,
   detectCollisions
 } from '../utils/pong-utils';
+import { SINGLE_PLAYER, MULTI_PLAYER } from '../utils/constants';
 
 
 const withPongLogic = (WrappedComponent) => (
@@ -13,6 +15,7 @@ const withPongLogic = (WrappedComponent) => (
       super(props);
 
       this.state = {
+        gameStatus: SINGLE_PLAYER,
         playerPaddle1: 0,
         playerPaddle2: 0,
         scorePlayer1: 0,
@@ -28,6 +31,7 @@ const withPongLogic = (WrappedComponent) => (
     }
 
     componentDidMount() {
+      this.socket = io('http://192.168.0.7:3001');
       this.gameLoop();
     }
 

@@ -4,7 +4,8 @@
   "description": "A Demo of using React to make a pong game using DOM elements. Also Socket.io to add multiplayer capabilities. Traditionally, browser-based games use an HTML canvas element. Let's explore one way React could be used to make a classic pong game. We can also allow two people to play against each other using websockets with the socket.io library.",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --host 0.0.0.0 --port 3000 --progress --inline --hot"
+    "start": "webpack-dev-server --host 0.0.0.0 --port 3000 --progress --inline --hot",
+    "server": "./node_modules/babel-cli/bin/babel-node.js ./src/server.js"
   },
   "author": "Denver Smith",
   "license": "MIT",
@@ -16,6 +17,7 @@
     "socket.io-client": "^2.0.3"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
