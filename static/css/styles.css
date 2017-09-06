@@ -1,5 +1,5 @@
 html, body {
-  background: #4caf50;
+  background: #000;
   font-family: monospace;
 }
 
@@ -9,10 +9,13 @@ html, body {
   bottom: 0;
   right: 0;
   left: 0;
-  margin: auto;
+  margin-left: auto;
+  margin-right: auto;
   width: 900px;
   height: 700px;
   background: #000;
+  border-bottom: 5px solid #fff;
+  border-top: 5px solid #fff;
 }
 
 .scoreboard {

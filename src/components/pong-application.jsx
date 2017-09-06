@@ -8,10 +8,10 @@ import withPongLogic from './pong-logic';
 
 
 const PongApplication = ({
-  playerPaddle1,
-  playerPaddle2,
-  scorePlayer1,
-  scorePlayer2,
+  leftPaddleY,
+  rightPaddleY,
+  leftScore,
+  rightScore,
   ballPosition,
   handleMouseMove
 }) => (
@@ -19,21 +19,21 @@ const PongApplication = ({
     className="game-area"
     onMouseMove={(e) => handleMouseMove(e.clientY)}>
     <Scoreboard
-      scorePlayer1={scorePlayer1}
-      scorePlayer2={scorePlayer2} />
-    <Paddle yPosition={playerPaddle1} />
+      leftScore={leftScore}
+      rightScore={rightScore} />
+    <Paddle yPosition={leftPaddleY} />
     <Paddle
-      yPosition={playerPaddle1}
+      yPosition={rightPaddleY}
       isRightPaddle={true} />
     <Ball position={{x: ballPosition.x, y: ballPosition.y}} />
   </div>
 );
 
 PongApplication.propTypes = {
-  playerPaddle1: PropTypes.number.isRequired,
-  playerPaddle2: PropTypes.number.isRequired,
-  scorePlayer1: PropTypes.number.isRequired,
-  scorePlayer2: PropTypes.number.isRequired,
+  leftPaddleY: PropTypes.number.isRequired,
+  rightPaddleY: PropTypes.number.isRequired,
+  leftScore: PropTypes.number.isRequired,
+  rightScore: PropTypes.number.isRequired,
   ballPosition: PropTypes.shape({
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired

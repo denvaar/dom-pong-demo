@@ -2,20 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 
-const Scoreboard = ({ scorePlayer1, scorePlayer2 }) => (
+const Scoreboard = ({ leftScore, rightScore }) => (
   <div className="scoreboard">
     <div className="player-1-score">
-      {scorePlayer1}
+      {leftScore}
     </div>
     <div className="player-2-score">
-      {scorePlayer2}
+      {rightScore}
     </div>
   </div>
 );
 
 Scoreboard.propTypes = {
-  scorePlayer1: PropTypes.number.isRequired,
-  scorePlayer2: PropTypes.number.isRequired
+  leftScore: PropTypes.number.isRequired,
+  rightScore: PropTypes.number.isRequired
 };
 
 export default Scoreboard;

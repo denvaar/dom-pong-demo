@@ -16,10 +16,11 @@ const withPongLogic = (WrappedComponent) => (
 
       this.state = {
         gameStatus: SINGLE_PLAYER,
-        playerPaddle1: 0,
-        playerPaddle2: 0,
-        scorePlayer1: 0,
-        scorePlayer2: 0,
+        playerIndex: undefined,
+        leftPaddleY: 0,
+        rightPaddleY: 0,
+        leftScore: 0,
+        rightScore: 0,
         ballPosition: {
           x: 900/2,
           y: 700/2,
@@ -31,57 +32,81 @@ const withPongLogic = (WrappedComponent) => (
     }
 
     componentDidMount() {
-      this.socket = io('http://192.168.0.7:3001');
+      this.socket = io('http://10.3.15.165:3001');
+
+      this.socket.on('assign-player', ({ playerIndex }) => {
+        if (playerIndex < 3) {
+          console.log(`You are player ${playerIndex}`);
+        } else {
+          console.log('You are a spectator');
+        }
+        this.setState({ playerIndex });
+      });
+
+      this.socket.on('game-update', (gameData) => {
+        this.setState(gameData);
+      });
+
+      this.socket.on('game-status', (statusCode) => {
+        this.setState({ gameStatus: statusCode });
+      });
+
       this.gameLoop();
     }
 
     gameLoop() {
       setInterval(() => {
-        const collisionAction = detectCollisions(
-          this.state.ballPosition,
-          this.state.playerPaddle1,
-          this.state.playerPaddle2
-        );
+        if (this.state.playerIndex < 3) {
+          const collisionAction = detectCollisions(
+            this.state.ballPosition,
+            this.state.leftPaddleY,
+            this.state.rightPaddleY
+          );
 
-        const nextBallPosition = updateBallPosition(
-          collisionAction.ballPosition.vX,
-          collisionAction.ballPosition.vY,
-          collisionAction.ballPosition
-        );
+          const nextBallPosition = updateBallPosition(
+            collisionAction.ballPosition.vX,
+            collisionAction.ballPosition.vY,
+            collisionAction.ballPosition
+          );
 
-        const nextScore = updateScore(collisionAction.type, this.state.scorePlayer1, this.state.scorePlayer2);
+          const nextScore = updateScore(collisionAction.type, this.state.leftScore, this.state.rightScore);
 
-        this.setState({
-          ballPosition: nextBallPosition,
-          scorePlayer1: nextScore.player1,
-          scorePlayer2: nextScore.player2
-        });
+          const updatedState = {
+            ballPosition: nextBallPosition,
+            leftScore: nextScore.player1,
+            rightScore: nextScore.player2
+          };
+
+          this.socket.emit('game-update', updatedState);
+          this.setState(updatedState);
+        }
       }, 1000.0 / 60.0);
     }
 
     handleMouseMove(yPosition) {
-      this.setState({
-        playerPaddle1: yPosition,
-        playerPaddle2: yPosition
-      });
+      if (this.state.playerIndex < 3) {
+        const updatedYPosition = this.state.playerIndex === 1 ? {leftPaddleY: yPosition} : {rightPaddleY: yPosition};
+        this.socket.emit('game-update', updatedYPosition);
+        this.setState(updatedYPosition);
+      }
     }
 
     render() {
       const {
-        playerPaddle1,
-        playerPaddle2,
+        leftPaddleY,
+        rightPaddleY,
         ballPosition,
-        scorePlayer1,
-        scorePlayer2
+        leftScore,
+        rightScore
       } = this.state;
 
       return (
         <WrappedComponent
           handleMouseMove={(yPosition) => this.handleMouseMove(yPosition)}
-          scorePlayer1={scorePlayer1}
-          scorePlayer2={scorePlayer2}
-          playerPaddle1={playerPaddle1}
-          playerPaddle2={playerPaddle2}
+          leftScore={leftScore}
+          rightScore={rightScore}
+          leftPaddleY={leftPaddleY}
+          rightPaddleY={rightPaddleY}
           ballPosition={ballPosition} />
       );
     }

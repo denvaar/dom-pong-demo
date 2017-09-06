@@ -1,6 +1,6 @@
 const io = require('socket.io')();
 
-import { PLAYING, WAITING } from './utils/constants';
+import { SINGLE_PLAYER, MULTI_PLAYER } from './utils/constants';
 
 
 io.on('connection', (socket) => {
@@ -8,16 +8,22 @@ io.on('connection', (socket) => {
 
   console.log(`player connected (${clientCount} total)`);
 
+  socket.emit('assign-player', { playerIndex: clientCount });
+
   if (clientCount === 2) {
-    io.emit('game-status', PLAYING);
+    io.emit('game-status', MULTI_PLAYER);
   }
+
+  socket.on('game-update', (gameData) => {
+    socket.broadcast.emit('game-update', gameData);
+  });
 
   socket.on('disconnect', () => {
     let clientCount = io.engine.clientsCount;
 
     console.log(`player disconnected (${clientCount} total)`);
     if (clientCount !== 2) {
-      io.emit('game-status', WAITING);
+      io.emit('game-status', SINGLE_PLAYER);
     }
   });
 });
